@@ -46,3 +46,4 @@ function calcFlujo(peso){
     flujo += resto*4;
     return flujo;
 }
+console.log()
