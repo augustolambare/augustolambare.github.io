@@ -8,8 +8,8 @@ CALCULAR.addEventListener('click', () => {
     //validamos que se cargue un dato:
     if (DATO > 0 && DATO <= 30){
         ERROR.style.display = 'none'
-        let flujo = calcFlujo(DATO);
-        let mantenimiento = flujo*1.5;
+        let flujo = Math.trunc(calcFlujo(DATO));
+        let mantenimiento = Math.trunc(flujo*1.5);
         FLU.innerHTML = flujo + ' cc/hr';
         MAN.innerHTML = 'm+m/2: ' + mantenimiento + ' cc/hr';
         FLU.style.display = 'block';
@@ -31,19 +31,15 @@ CALCULAR.addEventListener('click', () => {
 })
 
 function calcFlujo(peso){
-    let resto = peso;
     let flujo = 0;
-    if (resto>20){
-        let aux = resto-20;
-        flujo += aux*1;
-        resto -= aux;
-    } 
-    if (resto>10){
-        let aux = resto-10;
-        flujo += aux*2;
-        resto -= aux;
+    if (peso <= 10 && peso >= 1){
+        flujo = peso * 100 / 24;
     }
-    flujo += resto*4;
+    if (peso <= 20 && peso >= 11){
+        flujo = (((peso - 10) * 50) + 1000) / 24;
+    }
+    if (peso <= 30 && peso >= 21){
+        flujo = (((peso - 20) * 20) + 1500) / 24;
+    }
     return flujo;
 }
-console.log()
