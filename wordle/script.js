@@ -1,34 +1,55 @@
 let intentos = 6;
-let diccionario = ['APPLE', 'HURLS', 'WINGS', 'YOUTH']
 
-const palabra = diccionario[Math.floor(Math.random() * diccionario.length)];
-
-window.addEventListener('load', init);
-
-function init(){
-    console.log('Esto se ejecuta solo cuando se carga la pagina web')
-}
+//se estiran los datos de la api
+const API = "https://random-word-api.vercel.app/api?words=1&length=5";
+fetch(API)
+    .then((response) => response.json())
+    //se asigna la palabra y se convierte a mayuscula
+    .then((response) => {
+        palabra = response[0].toUpperCase();
+    })
+    .catch((err) => {
+        console.log("La API no responde, se usa lista local");
+        let diccionario = ['APPLE', 'HURLS', 'WINGS', 'YOUTH'];
+        palabra = diccionario[Math.floor(Math.random() * diccionario.length)];
+    });
 
 const INPUT = document.getElementById("guess-input");
 const VALOR = INPUT.value;
 
 const BUTTON = document.getElementById("guess-button");
-BUTTON.addEventListener("click", intentar);
+BUTTON.addEventListener("click", intentar, limpiarInput);
+document.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13 && intentos != 0) {
+        intentar();
+        limpiarInput();
+    }
+});
 
-for (let i in palabra){
-    console.log(palabra[i]);
+function limpiarInput(){
+    INPUT.value = ""; //vaciamos el input cuando intenta
 }
 
 function intentar(){
     const INTENTO = leerIntento();
+    const GRID = document.getElementById("grid");
+    const ROW = document.createElement('div');
+    ROW.style.textAlign = "center";
+    ROW.style.margin = "10px";
+    ROW.className = 'row';
     if (INTENTO === palabra){
         terminar("<h1>GANASTE!😀</h1>")
+        for (let i in palabra){
+            const SPAN = document.createElement('span');
+            SPAN.className = 'letter';
+            SPAN.innerHTML = palabra[i];
+            SPAN.style.backgroundColor = '#79b851'; //verde
+            ROW.appendChild(SPAN);
+        }
+        GRID.appendChild(ROW);
 
         return
     }
-    const GRID = document.getElementById("grid");
-    const ROW = document.createElement('div');
-    ROW.className = 'row';
     for (let i in palabra){
         const SPAN = document.createElement('span');
         SPAN.className = 'letter';
@@ -48,6 +69,14 @@ function intentar(){
 
     intentos --;
     if (intentos == 0){
+        for (let i in palabra){
+            const SPAN = document.createElement('span');
+            SPAN.className = 'letter';
+            SPAN.innerHTML = palabra[i];
+            SPAN.style.backgroundColor = '#79b851'; //verde
+            ROW.appendChild(SPAN);
+        }
+        GRID.appendChild(ROW);
         terminar("<h1>PERDISTE!😖</h1>")
     }
 }
@@ -59,7 +88,6 @@ function terminar(mensaje){
     let contenedor = document.getElementById('guesses');
     contenedor.innerHTML = mensaje;
 }
-
 
 function leerIntento(){
     let intento = document.getElementById("guess-input");
