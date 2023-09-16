@@ -69,14 +69,18 @@ function intentar(){
 
     intentos --;
     if (intentos == 0){
+        const ROW_RESPUESTA = document.createElement('div');
+        ROW_RESPUESTA.style.textAlign = "center";
+        ROW_RESPUESTA.style.margin = "10px";
+        ROW_RESPUESTA.className = 'row';
         for (let i in palabra){
             const SPAN = document.createElement('span');
             SPAN.className = 'letter';
             SPAN.innerHTML = palabra[i];
             SPAN.style.backgroundColor = '#79b851'; //verde
-            ROW.appendChild(SPAN);
+            ROW_RESPUESTA.appendChild(SPAN);
         }
-        GRID.appendChild(ROW);
+        GRID.appendChild(ROW_RESPUESTA);
         terminar("<h1>PERDISTE!😖</h1>")
     }
 }
